@@ -9,7 +9,7 @@ describe('Hacker Stories', () => {
       }
     }).as('getStories')
     cy.visit('/')
-    cy.wait('@getStories')
+    cy.wait('@getStories') // aqui estou pedindo para ele esperar até que a requisição seja feita
   })
 
   it('shows the footer', () => {
@@ -104,7 +104,7 @@ describe('Hacker Stories', () => {
         .should('be.visible')
     })
 
-    it.only('types and clicks the submit button', () => {
+    it('types and clicks the submit button', () => {
       cy.get('#search')
         .type(newTerm)
       cy.contains('Submit')
@@ -120,18 +120,19 @@ describe('Hacker Stories', () => {
         .should('be.visible')
     })
 
+   
     context('Last searches', () => {
       it('searches via the last searched term', () => {
         cy.get('#search')
           .type(`${newTerm}{enter}`)
 
-        cy.assertLoadingIsShownAndHidden()
+        cy.wait('@getNewTermStories')
 
         cy.get(`button:contains(${initialTerm})`)
           .should('be.visible')
           .click()
 
-        cy.assertLoadingIsShownAndHidden()
+        cy.wait('@getStories')
 
         cy.get('.item').should('have.length', 20)
         cy.get('.item')
@@ -144,13 +145,18 @@ describe('Hacker Stories', () => {
       it('shows a max of 5 buttons for the last searched terms', () => {
         const faker = require('faker')
 
+        cy.intercept({
+          method: 'GET',
+          pathname: '**/search',          
+        }).as('getNewSearched')
+
         Cypress._.times(6, () => {
           cy.get('#search')
             .clear()
             .type(`${faker.random.word()}{enter}`)
         })
 
-        cy.assertLoadingIsShownAndHidden()
+        cy.wait('@getNewSearched')
 
         cy.get('.last-searches button')
           .should('have.length', 5)
