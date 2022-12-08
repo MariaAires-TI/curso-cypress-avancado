@@ -1,0 +1,21 @@
+{ 
+    "hits": [
+        {
+            "title": "sample 1",
+            "url": "http://example.com/1",
+            "author": "Autor 1",
+            "num_comments": 34,
+            "points": 91,
+            "objectID": 0
+            
+        },
+        {
+            "title": "sample 1",
+            "url": "http://example.com/2",
+            "author": "Autor 2",
+            "num_comments": 54,
+            "points": 98,
+            "objectID": 1
+        }
+    ]
+}
