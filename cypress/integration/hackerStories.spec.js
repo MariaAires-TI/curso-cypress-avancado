@@ -81,14 +81,27 @@ describe('Hacker Stories', () => {
       })
 
       context('List of stories', () => {
-        // Since the API is external,
-        // I can't control what it will provide to the frontend,
-        // and so, how can I assert on the data?
-        // This is why this test is being skipped.
-        // TODO: Find a way to test it out.
-        it.skip('shows the right data for all rendered stories', () => {})
+        
+       
+        it.only('shows the right data for all rendered stories', () => {
+           const stories = require('../fixtures/stories')  
+           
+           cy.get('.item')
+            .first()
+            .should('contain', stories.hits[0].title)
+            .and('contain', stories.hits[0].author)
+            .and('contain', stories.hits[0].num_comments)
+            .and('contain', stories.hits[0].points)
+          
+          cy.get('.item')
+            .last()
+            .should('contain', stories.hits[1].title)
+            .and('contain', stories.hits[1].author)
+            .and('contain', stories.hits[1].num_comments)
+            .and('contain', stories.hits[1].points)           
+        })
 
-        it.only('shows one less story after dimissing the first one', () => {
+        it('shows one less story after dimissing the first one', () => {
           cy.get('.button-small')
             .first()
             .click()
@@ -159,13 +172,13 @@ describe('Hacker Stories', () => {
       })
 
       context('Last searches', () => {
-        it.only('shows a max of 5 buttons for the last searched terms', () => {
+        it('shows a max of 5 buttons for the last searched terms', () => {
           const faker = require('faker')
 
           cy.intercept(
             'GET',
             '**/search**',
-            { fixture: 'empty'}
+            { fixture: 'empty' }
           ).as('getRandomStories')
 
           Cypress._.times(6, () => {
@@ -173,7 +186,7 @@ describe('Hacker Stories', () => {
               .clear()
               .type(`${faker.random.word()}{enter}`)
             cy.wait('@getRandomStories')
-          })          
+          })
 
           cy.get('.last-searches button')
             .should('have.length', 5)
