@@ -49,11 +49,17 @@ describe('Hacker Stories', () => {
 
       cy.wait('@getNewTermStories')
 
+      cy.getLocalStorage('search')
+        .should('be.equal', newTerm)
+
       cy.get(`button:contains(${initialTerm})`)
         .should('be.visible')
         .click()
 
       cy.wait('@getStories')
+
+      cy.getLocalStorage('search')
+        .should('be.equal', initialTerm)
 
       cy.get('.item').should('have.length', 20)
       cy.get('.item')
@@ -237,6 +243,9 @@ describe('Hacker Stories', () => {
           .type(`${newTerm}{enter}`)
 
         cy.wait('@getStories')
+        
+        cy.getLocalStorage('search')
+        .should('be.equal', newTerm)
 
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -253,13 +262,16 @@ describe('Hacker Stories', () => {
 
         cy.wait('@getStories')
 
+        cy.getLocalStorage('search')
+        .should('be.equal', newTerm)
+
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
           .should('be.visible')
       })
 
       context('Last searches', () => {
-        it.only('shows a max of 5 buttons for the last searched terms', () => {
+        it('shows a max of 5 buttons for the last searched terms', () => {
           const faker = require('faker')
 
           cy.intercept(
@@ -269,11 +281,15 @@ describe('Hacker Stories', () => {
           ).as('getRandomStories')
 
           Cypress._.times(6, () => {
+            const randomWord = faker.random.word()
+
             cy.get('#search')
               .should('be.visible')
               .clear()
-              .type(`${faker.random.word()}{enter}`)
+              .type(`${randomWord}{enter}`)
             cy.wait('@getRandomStories')
+            cy.getLocalStorage('search')
+              .should('be.equal', randomWord)
           })
 
           cy.get('.last-searches')
