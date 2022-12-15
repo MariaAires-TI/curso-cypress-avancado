@@ -57,7 +57,7 @@ describe('Hacker Stories', () => {
 
       cy.get('.item').should('have.length', 20)
       cy.get('.item')
-        .first()        
+        .first()
         .should('be.visible')
         .and('contain', initialTerm)
       cy.get(`button:contains(${newTerm})`)
@@ -88,7 +88,7 @@ describe('Hacker Stories', () => {
         const stories = require('../fixtures/stories')
         it('shows the right data for all rendered stories', () => {
           cy.get('.item')
-            .first()            
+            .first()
             .should('be.visible')
             .should('contain', stories.hits[0].title)
             .and('contain', stories.hits[0].author)
@@ -98,7 +98,7 @@ describe('Hacker Stories', () => {
             .should('have.attr', 'href', stories.hits[0].url)
 
           cy.get('.item')
-            .last()            
+            .last()
             .should('be.visible')
             .should('contain', stories.hits[1].title)
             .and('contain', stories.hits[1].author)
@@ -110,7 +110,7 @@ describe('Hacker Stories', () => {
 
         it('shows one less story after dimissing the first one', () => {
           cy.get('.button-small')
-            .first()            
+            .first()
             .should('be.visible')
             .click()
 
@@ -119,7 +119,7 @@ describe('Hacker Stories', () => {
 
         context('Order by', () => {
           it('orders by title', () => {
-            cy.get('.list-header-button:contains(Title)')              
+            cy.get('.list-header-button:contains(Title)')
               .as('titleHeader')
               .should('be.visible')
               .click()
@@ -144,7 +144,7 @@ describe('Hacker Stories', () => {
 
           it('orders by author', () => {
             cy.get('.list-header-button:contains(Author)')
-              .as('authorHeader')              
+              .as('authorHeader')
               .should('be.visible')
               .click()
 
@@ -184,7 +184,7 @@ describe('Hacker Stories', () => {
 
           it('orders by points', () => {
             cy.get('.list-header-button:contains(Points)')
-              .as('pointsHeader')              
+              .as('pointsHeader')
               .should('be.visible')
               .click()
 
@@ -259,7 +259,7 @@ describe('Hacker Stories', () => {
       })
 
       context('Last searches', () => {
-        it('shows a max of 5 buttons for the last searched terms', () => {
+        it.only('shows a max of 5 buttons for the last searched terms', () => {
           const faker = require('faker')
 
           cy.intercept(
@@ -276,8 +276,10 @@ describe('Hacker Stories', () => {
             cy.wait('@getRandomStories')
           })
 
-          cy.get('.last-searches button')
-            .should('have.length', 5)
+          cy.get('.last-searches')
+            .within( () => {
+              cy.get('button').should('have.length', 5)
+            })
         })
       })
     })
