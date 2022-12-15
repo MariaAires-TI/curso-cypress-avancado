@@ -116,7 +116,7 @@ describe('Hacker Stories', () => {
         // This is why these tests are being skipped.
         // TODO: Find a way to test them out.
         context('Order by', () => {
-          it.only('orders by title', () => {
+          it('orders by title', () => {
             cy.get('.list-header-button:contains(Title)')
             .as('titleHeader')
               .click()
@@ -139,11 +139,62 @@ describe('Hacker Stories', () => {
               .should('have.attr', 'href', stories.hits[1].url)
           })
 
-          it('orders by author', () => {})
+          it('orders by author', () => {
+            cy.get('.list-header-button:contains(Author)')
+              .as('authorHeader')
+              .click()
 
-          it('orders by comments', () => {})
+            cy.get('.item')
+              .first()
+              .should('be.visible')
+              .and('contain', stories.hits[0].author)
+            
+            cy.get('@authorHeader')
+              .click()
 
-          it('orders by points', () => {})
+            cy.get('.item')
+              .first()
+              .should('be.visible')
+              .and('contain', stories.hits[1].author)
+          })
+
+          it('orders by comments', () => {
+            cy.get('.list-header-button:contains(Comments)')
+              .as('commentsHeader')
+              .click()
+
+            cy.get('.item')
+              .first()
+              .should('be.visible')
+              .and('contain', stories.hits[1].num_comments)
+            
+            cy.get('@commentsHeader')
+              .click()
+
+            cy.get('.item')
+              .first()
+              .should('be.visible')
+              .and('contain', stories.hits[0].num_comments)
+          })
+
+          it('orders by points', () => {
+            cy.get('.list-header-button:contains(Points)')
+            .as('pointsHeader')
+            .click()
+
+          cy.get('.item')
+            .first()
+            .should('be.visible')
+            .and('contain', stories.hits[1].points)
+          
+          cy.get('@pointsHeader')
+            .click()
+
+          cy.get('.item')
+            .first()
+            .should('be.visible')
+            .and('contain', stories.hits[0].points)
+          })
         })
       })
     })
