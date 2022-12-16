@@ -243,9 +243,9 @@ describe('Hacker Stories', () => {
           .type(`${newTerm}{enter}`)
 
         cy.wait('@getStories')
-        
+
         cy.getLocalStorage('search')
-        .should('be.equal', newTerm)
+          .should('be.equal', newTerm)
 
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -263,7 +263,7 @@ describe('Hacker Stories', () => {
         cy.wait('@getStories')
 
         cy.getLocalStorage('search')
-        .should('be.equal', newTerm)
+          .should('be.equal', newTerm)
 
         cy.get('.item').should('have.length', 2)
         cy.get(`button:contains(${initialTerm})`)
@@ -293,7 +293,7 @@ describe('Hacker Stories', () => {
           })
 
           cy.get('.last-searches')
-            .within( () => {
+            .within(() => {
               cy.get('button').should('have.length', 5)
             })
         })
@@ -331,7 +331,7 @@ context('Errors', () => {
   })
 })
 
-context('não mostra história', () => {
+context('does not show history', () => {
   const none = 'dfvhjdsbhjsvf'
   it('shows no story when none is returned', () => {
     cy.intercept(
@@ -347,5 +347,22 @@ context('não mostra história', () => {
     cy.wait('@getnone')
 
     cy.get('.item').should('not.exist')
+  })
+})
+
+context.only('simulating delay in a request', () => {
+  it('shows a "Loading ..." state before showing the results', () => {
+    cy.intercept(
+      'GET',
+      '**/search**',
+      {
+        delay: 1000,
+        fixture: 'stories'
+      }
+    )
+    cy.visit('/')
+
+    cy.get('p:contains(Loading)')
+      .should('be.visible')   
   })
 })
